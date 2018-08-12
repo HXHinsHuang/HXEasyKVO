@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "HXEasyKVO"
-  s.version      = "1.0.2"
+  s.version      = "1.0.3"
   s.license      = "MIT"
   s.summary      = "Easy to use KVO in Obj-C by Block or SEL."
   s.homepage     = "https://github.com/HXHinsHuang/HXEasyKVO"
