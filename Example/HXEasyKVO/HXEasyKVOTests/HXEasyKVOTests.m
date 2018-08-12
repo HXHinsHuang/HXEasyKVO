@@ -342,5 +342,14 @@
     _label.text = @"new";
 }
 
+- (void)testNilObserved {
+    
+    [self configRemove];
+    _label = nil;
+    _label2 = nil;
+    XCTAssertNil(_label);
+    XCTAssertNil(_label2);
+}
+
 
 @end
