@@ -3,8 +3,8 @@ Pod::Spec.new do |s|
   s.version      = "1.0.1"
   s.license      = "MIT"
   s.summary      = "Easy to use KVO in Obj-C by Block or SEL."
-  s.homepage     = "https://github.com/vagrantneversad/HXEasyKVO"
-  s.source       = { :git => "https://github.com/vagrantneversad/HXEasyKVO.git", :tag => "#{s.version}" }
+  s.homepage     = "https://github.com/HXHinsHuang/HXEasyKVO"
+  s.source       = { :git => "https://github.com/HXHinsHuang/HXEasyKVO.git", :tag => "#{s.version}" }
   s.source_files = "HXEasyKVO/*.{h,m}"
   s.requires_arc = true
   s.platform     = :ios, "7.0"
