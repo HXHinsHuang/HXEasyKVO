@@ -11,11 +11,11 @@
 #import <pthread.h>
 
 typedef enum {
-    KeyValueObservingTypeNew,
-    KeyValueObservingTypeOldNew,
-    KeyValueObservingTypeAll,
-    KeyValueObservingTypeSEL,
-} KeyValueObservingType;
+    HXKeyValueObservingTypeNew,
+    HXKeyValueObservingTypeOldNew,
+    HXKeyValueObservingTypeAll,
+    HXKeyValueObservingTypeSEL,
+} HXKeyValueObservingType;
 
 #pragma mark - HXKVOInfo
 
@@ -25,12 +25,12 @@ typedef enum {
     NSString * _Nonnull _keyPath;
     NSKeyValueObservingOptions _options;
     void * _Nullable _context;
-    KeyValueObservingType _type;
+    HXKeyValueObservingType _type;
     dispatch_queue_t _Nullable _queue;
     SEL _Nullable _selector;
-    KVONewValueChangeBlock _Nullable _newBlock;
-    KVOOldAndNewValueChangeBlock _Nullable _oldNewBlock;
-    KVOBlock _Nullable _allBlock;
+    HXKVONewValueChangeBlock _Nullable _newBlock;
+    HXKVOOldAndNewValueChangeBlock _Nullable _oldNewBlock;
+    HXKVOBlock _Nullable _allBlock;
 }
 @end
 
@@ -39,12 +39,12 @@ typedef enum {
 -(instancetype)initWithKeyPath:(NSString * _Nullable)keyPath
                        options:(NSKeyValueObservingOptions)options
                        context:(void * _Nullable)context
-                       KVOType:(KeyValueObservingType)type
+                       KVOType:(HXKeyValueObservingType)type
                          queue:(dispatch_queue_t _Nullable)queue
                       selector:(SEL _Nullable)selector
-                      newBlock:(KVONewValueChangeBlock _Nullable)newBlock
-                   oldNewBlock:(KVOOldAndNewValueChangeBlock _Nullable)oldNewBlock
-                      allBlock:(KVOBlock _Nullable)allBlock {
+                      newBlock:(HXKVONewValueChangeBlock _Nullable)newBlock
+                   oldNewBlock:(HXKVOOldAndNewValueChangeBlock _Nullable)oldNewBlock
+                      allBlock:(HXKVOBlock _Nullable)allBlock {
     if (self = [super init]) {
         _keyPath = keyPath;
         _options = options;
@@ -119,14 +119,14 @@ typedef enum {
 
 -(void)invokeWithInfo:(HXKVOInfo *)info object:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     switch (info->_type) {
-        case KeyValueObservingTypeNew:
+        case HXKeyValueObservingTypeNew:
             if (info->_newBlock) {
                 id newValue = change[NSKeyValueChangeNewKey];
                 info->_newBlock(self, object, newValue);
                 return;
             }
             break;
-        case KeyValueObservingTypeOldNew:
+        case HXKeyValueObservingTypeOldNew:
             if (info->_oldNewBlock) {
                 id oldValue = change[NSKeyValueChangeOldKey];
                 id newValue = change[NSKeyValueChangeNewKey];
@@ -134,13 +134,13 @@ typedef enum {
                 return;
             }
             break;
-        case KeyValueObservingTypeAll:
+        case HXKeyValueObservingTypeAll:
             if (info->_allBlock) {
                 info->_allBlock(self, object, change);
                 return;
             }
             break;
-        case KeyValueObservingTypeSEL:
+        case HXKeyValueObservingTypeSEL:
             if (_caller && info->_selector && [_caller respondsToSelector:info->_selector]) {
                 // https://www.jianshu.com/p/cbe9f21cee81
 #pragma clang diagnostic push
@@ -229,30 +229,30 @@ static char kKVOHandlerKey;
     return handler;
 }
 
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath newValueChangeBlock:(KVONewValueChangeBlock _Nullable)block {
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath newValueChangeBlock:(HXKVONewValueChangeBlock _Nullable)block {
     [self hx_observe:observed forKeyPath:keyPath queue:dispatch_get_main_queue() newValueChangeBlock:block];
 }
 
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue newValueChangeBlock:(KVONewValueChangeBlock _Nullable)block {
-    HXKVOInfo *info = [[HXKVOInfo alloc] initWithKeyPath:keyPath options:(NSKeyValueObservingOptionNew) context:nil KVOType:(KeyValueObservingTypeNew) queue:queue selector:nil newBlock:block oldNewBlock:nil allBlock:nil];
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue newValueChangeBlock:(HXKVONewValueChangeBlock _Nullable)block {
+    HXKVOInfo *info = [[HXKVOInfo alloc] initWithKeyPath:keyPath options:(NSKeyValueObservingOptionNew) context:nil KVOType:(HXKeyValueObservingTypeNew) queue:queue selector:nil newBlock:block oldNewBlock:nil allBlock:nil];
     [self.KVOHandler observerWithObserved:observed andInfo:info];
 }
 
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath oldAndNewValueChangeBlock:(KVOOldAndNewValueChangeBlock)block {
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath oldAndNewValueChangeBlock:(HXKVOOldAndNewValueChangeBlock)block {
     [self hx_observe:observed forKeyPath:keyPath queue:dispatch_get_main_queue() oldAndNewValueChangeBlock:block];
 }
 
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue oldAndNewValueChangeBlock:(KVOOldAndNewValueChangeBlock _Nullable)block {
-    HXKVOInfo *info = [[HXKVOInfo alloc] initWithKeyPath:keyPath options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil KVOType:(KeyValueObservingTypeOldNew) queue:queue selector:nil newBlock:nil oldNewBlock:block allBlock:nil];
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue oldAndNewValueChangeBlock:(HXKVOOldAndNewValueChangeBlock _Nullable)block {
+    HXKVOInfo *info = [[HXKVOInfo alloc] initWithKeyPath:keyPath options:(NSKeyValueObservingOptionNew|NSKeyValueObservingOptionOld) context:nil KVOType:(HXKeyValueObservingTypeOldNew) queue:queue selector:nil newBlock:nil oldNewBlock:block allBlock:nil];
     [self.KVOHandler observerWithObserved:observed andInfo:info];
 }
 
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context block:(KVOBlock _Nullable)block {
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context block:(HXKVOBlock _Nullable)block {
     [self hx_observe:observed forKeyPath:keyPath queue:dispatch_get_main_queue() options:options context:context block:block];
 }
 
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue options:(NSKeyValueObservingOptions)options context:(void *)context block:(KVOBlock _Nullable)block {
-    HXKVOInfo *info = [[HXKVOInfo alloc] initWithKeyPath:keyPath options:options context:nil KVOType:(KeyValueObservingTypeAll) queue:queue selector:nil newBlock:nil oldNewBlock:nil allBlock:block];
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue options:(NSKeyValueObservingOptions)options context:(void *)context block:(HXKVOBlock _Nullable)block {
+    HXKVOInfo *info = [[HXKVOInfo alloc] initWithKeyPath:keyPath options:options context:nil KVOType:(HXKeyValueObservingTypeAll) queue:queue selector:nil newBlock:nil oldNewBlock:nil allBlock:block];
     [self.KVOHandler observerWithObserved:observed andInfo:info];
 }
 
@@ -261,7 +261,7 @@ static char kKVOHandlerKey;
 }
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue options:(NSKeyValueObservingOptions)options context:(void *)context selector:(SEL _Nullable)selector {
-    HXKVOInfo *info = [[HXKVOInfo alloc] initWithKeyPath:keyPath options:options context:nil KVOType:(KeyValueObservingTypeSEL) queue:queue selector:selector newBlock:nil oldNewBlock:nil allBlock:nil];
+    HXKVOInfo *info = [[HXKVOInfo alloc] initWithKeyPath:keyPath options:options context:nil KVOType:(HXKeyValueObservingTypeSEL) queue:queue selector:selector newBlock:nil oldNewBlock:nil allBlock:nil];
     [self.KVOHandler observerWithObserved:observed andInfo:info];
 }
 

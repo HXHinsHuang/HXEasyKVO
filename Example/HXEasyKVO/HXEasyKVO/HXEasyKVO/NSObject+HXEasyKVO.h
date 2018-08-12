@@ -9,9 +9,9 @@
 #import <Foundation/Foundation.h>
 
 NS_ASSUME_NONNULL_BEGIN
-typedef void (^KVONewValueChangeBlock)(id _Nullable observer, id object, id newValue);
-typedef void (^KVOOldAndNewValueChangeBlock)(id _Nullable observer, id object, id oldValue, id newValue);
-typedef void (^KVOBlock)(id _Nullable observer, id object, NSDictionary<NSKeyValueChangeKey,id> *change);
+typedef void (^HXKVONewValueChangeBlock)(id _Nullable observer, id object, id newValue);
+typedef void (^HXKVOOldAndNewValueChangeBlock)(id _Nullable observer, id object, id oldValue, id newValue);
+typedef void (^HXKVOBlock)(id _Nullable observer, id object, NSDictionary<NSKeyValueChangeKey,id> *change);
 
 @interface NSObject (HXEasyKVO)
 
@@ -19,12 +19,12 @@ typedef void (^KVOBlock)(id _Nullable observer, id object, NSDictionary<NSKeyVal
  * NOTE: When the Block and the SEL are nil, if observer implement the observeValueForKeyPath:ofObject:change:context:, that will be called.
  */
 
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath newValueChangeBlock:(KVONewValueChangeBlock _Nullable)block;
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t _Nullable)queue newValueChangeBlock:(KVONewValueChangeBlock _Nullable)block;
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath oldAndNewValueChangeBlock:(KVOOldAndNewValueChangeBlock _Nullable)block;
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t _Nullable)queue oldAndNewValueChangeBlock:(KVOOldAndNewValueChangeBlock _Nullable)block;
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void * _Nullable)context block:(KVOBlock _Nullable)block;
--(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t _Nullable)queue options:(NSKeyValueObservingOptions)options context:(void * _Nullable)context block:(KVOBlock _Nullable)block;
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath newValueChangeBlock:(HXKVONewValueChangeBlock _Nullable)block;
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t _Nullable)queue newValueChangeBlock:(HXKVONewValueChangeBlock _Nullable)block;
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath oldAndNewValueChangeBlock:(HXKVOOldAndNewValueChangeBlock _Nullable)block;
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t _Nullable)queue oldAndNewValueChangeBlock:(HXKVOOldAndNewValueChangeBlock _Nullable)block;
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void * _Nullable)context block:(HXKVOBlock _Nullable)block;
+-(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t _Nullable)queue options:(NSKeyValueObservingOptions)options context:(void * _Nullable)context block:(HXKVOBlock _Nullable)block;
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void * _Nullable)context selector:(SEL _Nullable)selector;
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t _Nullable)queue options:(NSKeyValueObservingOptions)options context:(void * _Nullable)context selector:(SEL _Nullable)selector;
 
