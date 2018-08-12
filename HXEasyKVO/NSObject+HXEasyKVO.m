@@ -1,12 +1,12 @@
 //
-//  NSObject+HXKVO.m
-//  KVOBlock
+//  NSObject+HXEasyKVO.m
+//  HXEasyKVO
 //
-//  Created by hinshuang(黄浩贤) on 2018/8/11.
-//  Copyright © 2018 hinshuang. All rights reserved.
+//  Created by haoxian on 2018/8/12.
+//  Copyright © 2018年 haoxian. All rights reserved.
 //
 
-#import "NSObject+HXKVO.h"
+#import "NSObject+HXEasyKVO.h"
 #import <objc/message.h>
 #import <pthread.h>
 
@@ -32,8 +32,6 @@ typedef enum {
     KVOOldAndNewValueChangeBlock _Nullable _oldNewBlock;
     KVOBlock _Nullable _allBlock;
 }
-
-
 @end
 
 @implementation HXKVOInfo
@@ -43,7 +41,7 @@ typedef enum {
                        context:(void * _Nullable)context
                        KVOType:(KeyValueObservingType)type
                          queue:(dispatch_queue_t _Nullable)queue
-                        selector:(SEL _Nullable)selector
+                      selector:(SEL _Nullable)selector
                       newBlock:(KVONewValueChangeBlock _Nullable)newBlock
                    oldNewBlock:(KVOOldAndNewValueChangeBlock _Nullable)oldNewBlock
                       allBlock:(KVOBlock _Nullable)allBlock {
@@ -144,7 +142,7 @@ typedef enum {
             break;
         case KeyValueObservingTypeSEL:
             if (_caller && info->_selector && [_caller respondsToSelector:info->_selector]) {
-// https://www.jianshu.com/p/cbe9f21cee81
+                // https://www.jianshu.com/p/cbe9f21cee81
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 [_caller performSelector:info->_selector withObject:object withObject:change];
@@ -212,9 +210,9 @@ typedef enum {
 @end
 
 
-#pragma mark - NSObject+KVO
+#pragma mark - NSObject+HXEasyKVO
 
-@implementation NSObject (KVO)
+@implementation NSObject (HXEasyKVO)
 
 static char kKVOHandlerKey;
 
@@ -274,11 +272,14 @@ static char kKVOHandlerKey;
 }
 
 -(void)hx_removeObserved:(NSObject *)observed {
+    if (!observed) { return; }
     [self.KVOHandler removeObserved:observed];
 }
 
 -(void)hx_removeObserved:(NSObject *)observed forKeyPath:(NSString *)keyPath {
+    if (!observed) { return; }
     [self.KVOHandler removeObserved:observed keyPath:keyPath];
 }
 
 @end
+

@@ -1,9 +1,9 @@
 //
-//  NSObject+HXKVO.h
-//  KVOBlock
+//  NSObject+HXEasyKVO.h
+//  HXEasyKVO
 //
-//  Created by hinshuang(黄浩贤) on 2018/8/11.
-//  Copyright © 2018 hinshuang. All rights reserved.
+//  Created by haoxian on 2018/8/12.
+//  Copyright © 2018年 haoxian. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>
@@ -13,7 +13,11 @@ typedef void (^KVONewValueChangeBlock)(id _Nullable observer, id object, id newV
 typedef void (^KVOOldAndNewValueChangeBlock)(id _Nullable observer, id object, id oldValue, id newValue);
 typedef void (^KVOBlock)(id _Nullable observer, id object, NSDictionary<NSKeyValueChangeKey,id> *change);
 
-@interface NSObject (HXKVO)
+@interface NSObject (HXEasyKVO)
+
+/*
+ * NOTE: When the Block and the SEL are nil, if observer implement the observeValueForKeyPath:ofObject:change:context:, that will be called.
+ */
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath newValueChangeBlock:(KVONewValueChangeBlock _Nullable)block;
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t _Nullable)queue newValueChangeBlock:(KVONewValueChangeBlock _Nullable)block;

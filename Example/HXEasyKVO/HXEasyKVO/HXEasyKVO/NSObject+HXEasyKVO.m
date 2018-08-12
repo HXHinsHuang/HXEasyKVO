@@ -272,10 +272,12 @@ static char kKVOHandlerKey;
 }
 
 -(void)hx_removeObserved:(NSObject *)observed {
+    if (!observed) { return; }
     [self.KVOHandler removeObserved:observed];
 }
 
 -(void)hx_removeObserved:(NSObject *)observed forKeyPath:(NSString *)keyPath {
+    if (!observed) { return; }
     [self.KVOHandler removeObserved:observed keyPath:keyPath];
 }
 
