@@ -1,14 +1,14 @@
 # HXEasyKVO
 Easy to use KVO in Obj-C by Block or SEL.
 
-##Installation
+## Installation
 HXEasyKVO is available through CocoaPods. To install it, simply add the following line to your Podfile:
 
 ``` 
 pod 'HXEasyKVO'
 ```
 
-##Example:
+## Example:
 #### import the header file
 
 ``` OBJC
@@ -124,10 +124,10 @@ pod 'HXEasyKVO'
 @end
 ```
 
-##Author
+## Author
 hins Huang, 505608099@qq.com
 
-##License
+## License
 HXEasyKVO is available under the MIT license. See the LICENSE file for more info.
 
 
