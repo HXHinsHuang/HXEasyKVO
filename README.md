@@ -1,5 +1,5 @@
 # HXEasyKVO
-Easy to use KVO in Obj-C by Block or SEL.
+HXEasyKVO is a lightweight packaging KVO by making callbacks using Block and SEL. The observer will be automatically removed when the observer or observed is released. Of course you can manually remove it earlier. You can specify the thread of callback, and it's thread-safe.
 
 ## Installation
 HXEasyKVO is available through CocoaPods. To install it, simply add the following line to your Podfile:
