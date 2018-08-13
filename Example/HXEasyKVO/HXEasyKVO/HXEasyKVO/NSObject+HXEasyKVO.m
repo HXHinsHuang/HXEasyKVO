@@ -151,12 +151,9 @@ typedef enum {
             }
             break;
     }
-    if (_caller && [_caller respondsToSelector:@selector(observeValueForKeyPath:ofObject:change:context:)]) {
-        dispatch_async(info->_queue, ^{
-            [self->_caller observeValueForKeyPath:info->_keyPath ofObject:object change:change context:context];
-        });
-        
-    }
+    dispatch_async(info->_queue, ^{
+        [self->_caller observeValueForKeyPath:info->_keyPath ofObject:object change:change context:context];
+    });
 }
 
 -(void)removeAllObserverd {

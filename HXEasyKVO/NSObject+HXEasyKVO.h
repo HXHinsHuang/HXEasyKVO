@@ -16,7 +16,7 @@ typedef void (^HXKVOBlock)(id _Nullable observer, id object, NSDictionary<NSKeyV
 @interface NSObject (HXEasyKVO)
 
 /*
- * NOTE: When the Block and the SEL are nil, if observer implement the observeValueForKeyPath:ofObject:change:context:, that will be called.
+ * NOTE: When the Block and the SEL are nil, or the SEL is not implement, that will call @selector(observeValueForKeyPath:ofObject:change:context:).
  */
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath newValueChangeBlock:(HXKVONewValueChangeBlock _Nullable)block;
