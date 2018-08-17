@@ -151,9 +151,7 @@ typedef enum {
             }
             break;
     }
-    dispatch_async(info->_queue, ^{
-        [self->_caller observeValueForKeyPath:info->_keyPath ofObject:object change:change context:context];
-    });
+    [self->_caller observeValueForKeyPath:info->_keyPath ofObject:object change:change context:context];
 }
 
 -(void)removeAllObserverd {
