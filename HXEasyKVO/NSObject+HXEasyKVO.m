@@ -109,11 +109,15 @@ typedef enum {
     NSCParameterAssert(dict);
     HXKVOInfo *info = dict[keyPath];
     NSCParameterAssert(info);
-    NSCParameterAssert(info->_queue);
     id copy = [change copy]; // 系统bug？old value会在指派线程时设置为nil，这里copy保存一下
-    dispatch_async(info->_queue, ^{
+    if (info->_queue) {
+        dispatch_async(info->_queue, ^{
+            [self invokeWithInfo:info object:object change:copy context:context];
+        });
+    } else {
         [self invokeWithInfo:info object:object change:copy context:context];
-    });
+    }
+    
     pthread_rwlock_unlock(&_lock);
 }
 
@@ -142,7 +146,6 @@ typedef enum {
             break;
         case HXKeyValueObservingTypeSEL:
             if (_caller && info->_selector && [_caller respondsToSelector:info->_selector]) {
-                // https://www.jianshu.com/p/cbe9f21cee81
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
                 [_caller performSelector:info->_selector withObject:object withObject:change];
@@ -225,7 +228,7 @@ static char kKVOHandlerKey;
 }
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath newValueChangeBlock:(HXKVONewValueChangeBlock _Nullable)block {
-    [self hx_observe:observed forKeyPath:keyPath queue:dispatch_get_main_queue() newValueChangeBlock:block];
+    [self hx_observe:observed forKeyPath:keyPath queue:nil newValueChangeBlock:block];
 }
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue newValueChangeBlock:(HXKVONewValueChangeBlock _Nullable)block {
@@ -234,7 +237,7 @@ static char kKVOHandlerKey;
 }
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath oldAndNewValueChangeBlock:(HXKVOOldAndNewValueChangeBlock)block {
-    [self hx_observe:observed forKeyPath:keyPath queue:dispatch_get_main_queue() oldAndNewValueChangeBlock:block];
+    [self hx_observe:observed forKeyPath:keyPath queue:nil oldAndNewValueChangeBlock:block];
 }
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue oldAndNewValueChangeBlock:(HXKVOOldAndNewValueChangeBlock _Nullable)block {
@@ -243,7 +246,7 @@ static char kKVOHandlerKey;
 }
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context block:(HXKVOBlock _Nullable)block {
-    [self hx_observe:observed forKeyPath:keyPath queue:dispatch_get_main_queue() options:options context:context block:block];
+    [self hx_observe:observed forKeyPath:keyPath queue:nil options:options context:context block:block];
 }
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue options:(NSKeyValueObservingOptions)options context:(void *)context block:(HXKVOBlock _Nullable)block {
@@ -252,7 +255,7 @@ static char kKVOHandlerKey;
 }
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context selector:(SEL _Nullable)selector {
-    [self hx_observe:observed forKeyPath:keyPath queue:dispatch_get_main_queue() options:options context:context selector:selector];
+    [self hx_observe:observed forKeyPath:keyPath queue:nil options:options context:context selector:selector];
 }
 
 -(void)hx_observe:(NSObject *)observed forKeyPath:(NSString *)keyPath queue:(dispatch_queue_t)queue options:(NSKeyValueObservingOptions)options context:(void *)context selector:(SEL _Nullable)selector {
